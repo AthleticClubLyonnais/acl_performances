@@ -130,6 +130,49 @@ table.rc-grid{border-collapse:separate;border-spacing:0;font-size:14px}
 .rc-grid tr.sep td{background:var(--vert-clair);font-family:var(--titre);text-transform:uppercase;font-weight:700;letter-spacing:.6px;color:var(--vert-fonce);padding:5px 8px;position:static}
 .rc-grid tr.sep td:first-child{position:static}
 .fchip{display:inline-block;background:var(--soleil);color:var(--noir);border-radius:99px;padding:2px 10px;font-size:13px;margin-right:6px}.fchip a{color:var(--noir);text-decoration:none;font-weight:700;margin-left:4px}
+
+.rc-mc{border:1px solid var(--ligne);border-radius:10px;margin:0 0 10px;padding:8px 12px;background:#fff}
+.rc-mc .t{padding:2px 0 4px;font-size:16px}
+.rc-mc .l{display:flex;gap:10px;align-items:baseline;padding:6px 6px;border-top:1px solid #eef4f4;cursor:pointer;border-radius:4px}
+.rc-mc .l.new{background:#fdf3d9}
+.rc-mc .c{min-width:42px;font-family:var(--titre);font-weight:700;color:var(--vert);text-transform:uppercase}
+.rc-mc b{min-width:76px;font-size:15.5px}
+.rc-mc .a{color:var(--gris);font-size:12.5px;flex:1;min-width:0}
+.rc-sep{font-family:var(--titre);font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--vert-fonce);background:var(--vert-clair);padding:5px 10px;border-radius:6px;margin:12px 0 8px}
+@media(max-width:600px){
+  .wrap.head-in{gap:10px 14px;padding:14px 12px 14px}
+  .logo{height:46px}
+  .head-txt{flex:1 1 150px;min-width:0;border-left:2px solid rgba(255,255,255,.35);padding-left:14px}
+  .marque{display:none}
+  h1{font-size:25px}
+  .sous{font-size:12px;margin-top:4px}
+  .head-stats{width:100%;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .hs{min-width:0;padding:5px 3px;border-radius:8px}.hs b{font-size:17px}.hs span{font-size:9px;letter-spacing:.3px}
+  main{padding-top:12px}
+  .wrap{padding:0 12px}
+  .barre{padding:10px 12px;gap:8px 12px;margin-bottom:12px}
+  .champ{font-size:11px;gap:3px}
+  .seg button{padding:6px 11px;font-size:14px}
+  .btn{padding:7px 11px;font-size:14px}
+  select,input[type=text],input[type=date]{padding:7px 8px;min-width:0;font-size:15px}
+  #sem-date{min-width:0;width:140px}
+  .barre .champ>div[style*="flex"]{flex-wrap:wrap}
+  .kpis{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .kpi{padding:8px 10px}.kpi .lib{font-size:11.5px}.kpi .val{font-size:23px}.kpi .det{font-size:11.5px}
+  .carte{padding:12px 12px;margin-bottom:12px}.carte h2{font-size:19px}
+  #sem-titre{font-size:21px!important}
+  .cartes{grid-template-columns:1fr;gap:10px}
+  .perf{padding:12px 13px}.perf .grand{font-size:32px}
+  .rc-fam{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;gap:6px}
+  .rc-fam button{font-size:15px;padding:6px 13px;white-space:nowrap}
+  nav .wrap{padding:8px 12px 0}
+  nav button{font-size:14px;padding:8px 13px 7px}
+  th,td{padding:6px 5px}table{font-size:13px}
+  .test-res{font-size:13px}
+  .barre .champ{flex:1 1 140px}.barre .champ:has(#ep-ev),.barre .champ:has(#at-nom),.barre .champ:has(#rc-q),.barre .champ:has(#ep-test),.barre .champ:has(#cp-a),.barre .champ:has(#cp-b){flex-basis:100%}
+  .barre select,.barre input[type=text]{width:100%;max-width:none}
+  .champ>.seg{align-self:flex-start}.seg button{white-space:nowrap}
+}
 @media print{nav,.barre{display:none}body{background:#fff}}
 </style>
 </head>
@@ -342,6 +385,7 @@ function showOnglet(o){
   ['semaine','epreuve','athlete','comparer','records'].forEach(id=>{$('#'+id).hidden=id!==o});
   if(o==='semaine')renderSemaine();else if(o==='epreuve')renderEpreuve();else if(o==='athlete')renderAthlete();else if(o==='records')renderRecords();else renderComparer();
   history.replaceState(null,'','#'+o);
+  try{const s=document.querySelector('#onglets [aria-selected=true]');const w=document.querySelector('#onglets');w.scrollTo({left:s.offsetLeft-12,behavior:'smooth'})}catch(e){}
 }
 $$('#onglets button').forEach(b=>b.onclick=()=>showOnglet(b.dataset.onglet));
 function seg(id,fn){const c=$(id);c.querySelectorAll('button').forEach(b=>b.onclick=()=>{c.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));fn(b.dataset.v)})}
@@ -501,7 +545,7 @@ function renderHist(s,tx,recG,rec){
   sv+=`<line x1="${m.l}" x2="${W-m.r}" y1="${m.t+ih}" y2="${m.t+ih}" stroke="#9aa5a5"/>`;
   xt.t.forEach(t=>{const v=unG(s.ev,t);sv+=`<text x="${X(t)}" y="${m.t+ih+16}" text-anchor="middle">${fmtAxe(s.ev,v,Math.abs(xt.st))}</text><line x1="${X(t)}" x2="${X(t)}" y1="${m.t+ih}" y2="${m.t+ih+4}" stroke="#9aa5a5"/>`});
   sv+=`<text x="${m.l}" y="${H-6}">← moins bon</text><text x="${W-m.r}" y="${H-6}" text-anchor="end">meilleur →</text>`;
-  if(recG!=null&&recG>=lo&&recG<=hi){const x=X(recG);sv+=`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${m.t+ih}" stroke="#f2b134" stroke-width="3"/><text x="${Math.min(x-6,W-m.r-4)}" y="${m.t+11}" text-anchor="end" style="fill:#212121;font-weight:700">Record ${esc(rec[0])}</text>`}
+  if(recG!=null&&recG>=lo&&recG<=hi){const x=X(recG);sv+=`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${m.t+ih}" stroke="#f2b134" stroke-width="3"/><text x="${Math.min(x-6,W-m.r-4)}" y="${m.t+11}" text-anchor="end" style="fill:#212121;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:4px">Record ${esc(rec[0])}</text>`}
   if(tx!=null){const x=X(tx);sv+=`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${m.t+ih}" stroke="#212121" stroke-width="2.5" stroke-dasharray="6 4"/><text x="${x+6}" y="${m.t+26}" style="fill:#212121;font-weight:700">Ma perf ${esc(fmtPerf(s.ev,unG(s.ev,tx)))}</text>`}
   sv+=`</svg>`;host.innerHTML=sv;
   $('#ep-hist-note').textContent=`${fr(s.n)} performances ${s.cat?'en '+s.cat:'toutes catégories'}${hors?` · ${fr(hors)} très en deçà non affichées`:''}${s.n-s.nv?` · dont ${fr(s.n-s.nv)} avec vent > 2 m/s (exclues des records et classements)`:''}. Les meilleures performances sont à droite.`;
@@ -781,13 +825,22 @@ function renderRecords(){
   $('#rc-filtres-box').hidden=!fa.length;$('#rc-filtres').innerHTML=fa.join('');$('#rc-filtres').querySelectorAll('a[data-x]').forEach(a=>a.onclick=e=>{e.preventDefault();rcF[a.dataset.x]=null;renderRecords()});
   const fam=FAMS.find(f=>f[0]===rcF.fam);
   $('#rc-titre').textContent=`Records · ${fam[1]}${rcF.sx==='*'?'':rcF.sx==='1'?' · Femmes':' · Hommes'}${rcF.cats==='m'?' · Masters':''}`;
-  $('#rc-note').innerHTML=`${fr(L.length)} record${L.length>1?'s':''}. ${rcF.vue==='grille'&&rcF.fam!=='relais'?'<span style="background:#fdf3d9;padding:1px 6px;border-radius:4px">Fond jaune</span> : établi en 2025 ou après · * : record des PDF absent de l\'historique SI-FFA, conservé tel quel · ':''}Cliquer sur un record ouvre l'épreuve. Pastilles : <span class="badge top">SI-FFA</span> confirmé par l'historique, <span class="badge" style="background:var(--sable);color:var(--noir)">PDF seul</span> non retrouvé, <span class="badge pb">PDF</span> relais ou non vérifiable.`;
+  $('#rc-note').innerHTML=`${fr(L.length)} record${L.length>1?'s':''} · toucher un record ouvre l'épreuve.<details><summary>Légende</summary>${rcF.vue==='grille'&&rcF.fam!=='relais'?'<span style="background:#fdf3d9;padding:1px 6px;border-radius:4px">Fond jaune</span> : établi en 2025 ou après. * : record des PDF absent de l\'historique SI-FFA, conservé tel quel.<br>':''}Pastilles de la liste : <span class="badge top">SI-FFA</span> confirmé par l'historique, <span class="badge" style="background:var(--sable);color:var(--noir)">PDF seul</span> non retrouvé, <span class="badge pb">PDF</span> relais ou non vérifiable.</details>`;
   const T=$('#rc-table');
   if(!L.length)T.innerHTML='<div class="vide">Aucun record pour cette sélection. Essaie un autre sexe, « Masters » ou efface la recherche.</div>';
   else if(rcF.vue==='grille'&&rcF.fam!=='relais'){
     const cats=(rcF.cats==='m'?CAT_M:CAT_J).filter(c=>L.some(r=>r[3]===c));
     const rows=new Map();L.forEach(r=>{const k=r[0]+'|'+r[1]+'|'+r[2];(rows.get(k)||rows.set(k,[]).get(k)).push(r)});
     const keys=[...rows.keys()].sort((a,b)=>{const ra=rows.get(a)[0],rb=rows.get(b)[0];return (GRP_ORDRE.indexOf(ra[0])-GRP_ORDRE.indexOf(rb[0]))||(rcOrd.get(ra[0]+'|'+ra[1])-rcOrd.get(rb[0]+'|'+rb[1]))||(ra[2]-rb[2])});
+    if(window.matchMedia('(max-width:700px)').matches){
+      let hm='';let g1=null;
+      keys.forEach(k=>{const rr=rows.get(k),r0=rr[0];
+        if(rcF.fam==='courses'&&r0[0]!==g1){g1=r0[0];hm+=`<div class="rc-sep">${esc(g1==='1/2 Fond'?'Demi-fond':g1==='Fond et Hors Stade'?'Fond et hors stade':g1)}</div>`}
+        hm+=`<div class="rc-mc"><div class="t"><b>${esc(r0[1])}</b> <span class="chip">${r0[2]===1?'F':r0[2]===0?'H':'Mixte'}</span></div>`;
+        cats.forEach(c=>{const r=rr.find(x=>x[3]===c);if(!r)return;hm+=`<div class="l${rcAn(r)>=2025?' new':''}" data-i="${RA.indexOf(r)}"><span class="c">${rcCat(c)}</span><b>${esc(r[4])}${r[8]==='n'?' *':''}</b><span class="a">${esc(abrege(nomRec(r[5])))} · ${rcAn(r)||''}</span></div>`});
+        hm+='</div>'});
+      T.innerHTML=hm;T.querySelectorAll('.l[data-i]').forEach(d=>d.onclick=()=>ouvrirEpreuve(RA[+d.dataset.i]));
+    }else{
     let h='<table class="rc-grid"><thead><tr><th>Épreuve</th>'+cats.map(c=>`<th>${rcCat(c)}</th>`).join('')+'</tr></thead><tbody>';let g0=null;
     keys.forEach(k=>{const rr=rows.get(k),r0=rr[0];
       if(rcF.fam==='courses'&&r0[0]!==g0){g0=r0[0];h+=`<tr class="sep"><td colspan="${cats.length+1}">${esc(g0==='1/2 Fond'?'Demi-fond':g0==='Fond et Hors Stade'?'Fond et hors stade':g0)}</td></tr>`}
@@ -797,6 +850,7 @@ function renderRecords(){
       h+='</tr>'});
     T.innerHTML=h+'</tbody></table>';
     T.querySelectorAll('td.c[data-i]').forEach(td=>td.onclick=()=>ouvrirEpreuve(RA[+td.dataset.i]));
+    }
   }else{
     const S=L.slice().sort((a,b)=>(GRP_ORDRE.indexOf(a[0])-GRP_ORDRE.indexOf(b[0]))||(rcOrd.get(a[0]+'|'+a[1])-rcOrd.get(b[0]+'|'+b[1]))||(a[2]-b[2])||((CAT_J.concat(CAT_M)).indexOf(a[3])-(CAT_J.concat(CAT_M)).indexOf(b[3])));
     let h='<table><thead><tr><th>Épreuve</th><th>Cat.</th><th class="num">Performance</th><th>Athlète(s)</th><th>Date</th><th>Lieu</th><th>Source</th></tr></thead><tbody>';
