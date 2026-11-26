@@ -26,7 +26,7 @@ Ouvrir `site/index.html` dans un navigateur (double-clic). Aucun serveur ni conn
 2. Dans **Settings → Pages**, choisir **Source : GitHub Actions**.
 3. Chaque *push* qui modifie `site/` déclenche le workflow `Déploiement GitHub Pages` ; la page est disponible à l'adresse **https://athleticclublyonnais.github.io/acl_performances/** (rappelée aussi à la fin de l'exécution, onglet **Actions**).
 
-Si le déploiement échoue avec « No artifacts named github-pages were found », vérifier que le workflow utilise `actions/upload-pages-artifact@v4`, puis relancer avec **Re-run all jobs**.
+Le workflow comporte deux jobs, `build` (envoi du dossier `site/`) puis `deploy` : ne pas les regrouper en un seul, sinon l'erreur « No artifacts named github-pages were found » apparaît. En cas d'échec passager, relancer avec **Re-run all jobs**.
 
 ## Mise à jour des données
 
