@@ -84,6 +84,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
 .perf .quoi{color:var(--gris);font-size:13.5px}
 .perf .grand{font-family:var(--titre);font-weight:700;font-size:38px;line-height:1;margin:6px 0 2px;color:var(--vert-fonce)}
 .perf.rec .grand{color:var(--noir)}
+.perf.reccat{border-left-color:var(--vert);background:linear-gradient(180deg,var(--vert-clair),#fff 65%)}
 .perf .ou{color:var(--gris);font-size:12.5px}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
 .badge{font-family:var(--titre);text-transform:uppercase;font-weight:700;letter-spacing:.5px;font-size:13px;padding:2px 9px;border-radius:99px;background:var(--vert-clair);color:var(--vert-fonce)}
@@ -364,7 +365,8 @@ function analyser(i,scopeCat){
   let meilleurAvant=-Infinity;
   for(const j of all.rows){const q=R[j];if(q[5]===r[5]&&q[4]<=r[4]&&j!==i&&!q[7]){const gg=gd(ev,q[3]);if(gg>meilleurAvant)meilleurAvant=gg}}
   if(!venteux&&x>meilleurAvant+1e-9)pb=true;
-  return {i,ev,sx,cat,val:r[3],p,statut,pb,vent:venteux?r[7]:0,fiable:s.n>=MIN_N,date:r[4],ath:r[5],lieu:r[6]};
+  let abs=false;if(statut){const br=bestRecord(ev,sx);abs=!br||x>=gd(ev,br[4])-1e-9}
+  return {i,ev,sx,cat,val:r[3],abs,p,statut,pb,vent:venteux?r[7]:0,fiable:s.n>=MIN_N,date:r[4],ath:r[5],lieu:r[6]};
 }
 function renderSemaine(){
   const d0=sem.debut,d1=plusJours(d0,6);
@@ -372,7 +374,7 @@ function renderSemaine(){
   $('#sem-titre').textContent=`Semaine du ${d0%100} ${Math.floor(d0/100)%100!==Math.floor(d1/100)%100?MOIS[Math.floor(d0/100)%100-1]+' ':''}au ${fmtDate(d1)}`;
   const idx=[];R.forEach((r,i)=>{if(r[4]>=d0&&r[4]<=d1)idx.push(i)});
   const A=idx.map(i=>analyser(i,sem.cat));
-  const rec=A.filter(a=>a.statut==='battu'||a.statut==='etabli');const egales=A.filter(a=>a.statut==='egal').length;
+  const recAll=A.filter(a=>a.statut==='battu'||a.statut==='etabli');const rec=recAll.filter(a=>a.abs),recCat=recAll.filter(a=>!a.abs);const egales=A.filter(a=>a.statut==='egal').length;
   const top3=A.filter(a=>!a.vent&&a.fiable&&a.p.rankA<=3&&a.p.rankA>=1);
   const top10=A.filter(a=>!a.vent&&a.fiable&&a.p.rankA<=10);
   const pbs=A.filter(a=>a.pb);
@@ -380,7 +382,8 @@ function renderSemaine(){
   const k=$('#sem-kpis');k.innerHTML='';
   const kp=(lib,val,det,cls)=>{const d=el('div','kpi '+(cls||''));d.innerHTML=`<div class="lib">${lib}</div><div class="val">${val}</div><div class="det">${det||''}</div>`;k.appendChild(d)};
   kp('Performances',fr(A.length),`${fr(nath)} athlètes`);
-  kp('Records du club',fr(rec.length),'établis ou battus'+(egales?` · ${egales} égalé${egales>1?'s':''}`:''),'or');
+  kp('Records du club',fr(rec.length),'toutes catégories'+(egales?` · ${egales} égalé${egales>1?'s':''}`:''),'or');
+  kp('Records catégorie',fr(recCat.length),'dans leur catégorie');
   kp('Top 3 du club',fr(top3.length),'meilleurs de l\'histoire');
   kp('Top 10 du club',fr(top10.length),'parmi les athlètes');
   kp('PB',fr(pbs.length),'records personnels améliorés');
@@ -388,18 +391,17 @@ function renderSemaine(){
   if(!A.length){C.appendChild(el('div','vide','Aucune performance enregistrée cette semaine-là. Utilise ◀ ▶ ou le sélecteur de date.'));$('#sem-note').textContent='';return}
   let L=A.slice();
   const marquant=a=>a.statut||(!a.vent&&a.fiable&&a.p.rankA<=10)||(a.fiable&&a.p.pct>=90)||a.pb&&a.fiable&&a.p.pct>=60;
-  const score=a=>(a.statut==='battu'?3000:a.statut==='etabli'?2950:a.statut==='egal'?2900:0)+(a.fiable?(!a.vent&&a.p.rankA<=10?1000-a.p.rankA:0)+a.p.pct:a.p.pct/10);
+  const score=a=>(a.statut==='battu'?3000:a.statut==='etabli'?2950:a.statut==='egal'?2900:0)+(a.statut&&a.abs?200:0)+(a.fiable?(!a.vent&&a.p.rankA<=10?1000-a.p.rankA:0)+a.p.pct:a.p.pct/10);
   if(sem.filtre==='marquants')L=L.filter(marquant);
   L.sort((a,b)=>score(b)-score(a));
   const MAX=60;const shown=L.slice(0,MAX);
   if(!shown.length)C.appendChild(el('div','vide','Pas de fait marquant cette semaine. Passe sur « Toutes les perfs » pour tout voir.'));
   for(const a of shown){
     const ev=EV[a.ev];const rec=record(a.ev,a.sx,a.cat);
-    const c=el('div','perf'+(a.statut?' rec':''));c.tabIndex=0;c.setAttribute('role','button');
+    const c=el('div','perf'+(a.statut?(a.abs?' rec':' reccat'):''));c.tabIndex=0;c.setAttribute('role','button');
     const badges=[];
-    if(a.statut==='etabli')badges.push('<span class="badge or">Record club</span>');
-    else if(a.statut==='battu')badges.push('<span class="badge or">Record club</span>');
-    else if(a.statut==='egal')badges.push('<span class="badge or">Égale le record</span>');
+    if(a.statut==='etabli'||a.statut==='battu')badges.push(a.abs?'<span class="badge or">Record club</span>':'<span class="badge top">Record catégorie</span>');
+    else if(a.statut==='egal')badges.push(a.abs?'<span class="badge or">Égale le record club</span>':'<span class="badge top">Égale le record catégorie</span>');
     if(!a.vent&&a.fiable&&a.p.rankA===1&&!a.statut)badges.push('<span class="badge top">N°1 du club</span>');
     else if(!a.vent&&a.fiable&&a.p.rankA<=3&&!a.statut)badges.push('<span class="badge top">Top 3 du club</span>');
     else if(!a.vent&&a.fiable&&a.p.rankA<=10&&!a.statut)badges.push('<span class="badge top">Top 10 du club</span>');
@@ -413,7 +415,7 @@ function renderSemaine(){
     c.onclick=go;c.onkeydown=e=>{if(e.key==='Enter')go()};
     C.appendChild(c);
   }
-  $('#sem-note').textContent=`${shown.length} performance(s) affichée(s)${L.length>MAX?` sur ${L.length}`:''}. Clique sur une carte pour voir la distribution de l'épreuve.`;
+  $('#sem-note').textContent=`${shown.length} performance(s) affichée(s)${L.length>MAX?` sur ${L.length}`:''}. Clique sur une carte pour voir la distribution de l'épreuve. Record club (or) : meilleure performance de l'épreuve toutes catégories ; record catégorie (vert) : record de la catégorie de l'athlète.`;
 }
 seg('#sem-cat',v=>{sem.cat=v;renderSemaine()});seg('#sem-filtre',v=>{sem.filtre=v;renderSemaine()});
 $('#sem-prec').onclick=()=>{const i=semaines.filter(w=>w<sem.debut).pop();sem.debut=i||sem.debut;renderSemaine()};
