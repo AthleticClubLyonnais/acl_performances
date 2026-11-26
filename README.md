@@ -42,7 +42,7 @@ Les données (performances SI-FFA, records) sont intégrées dans `site/index.ht
 - Vent supérieur à +2,0 m/s (50 m à 200 m, haies, longueur, triple saut) : performance conservée, exclue des records, classements et records personnels.
 - Chronos manuels convertis en équivalent électronique ; salle et plein air séparés.
 - Année de catégorie = saison (année de fin) moins année de naissance (BE1, BE2, MI1…).
-- Historique : ACL depuis 2003 ; avant 2020, uniquement l'AC Tassin ; ACD et ACM depuis 2020.
+- Historique : AC Tassin de 2003 à 2019, puis ACL et ses sections (ACT, ACD, ACM) depuis 2020 ; ACD présent depuis 2020, ACM depuis 2025 ; aucune donnée avant 2003.
 
 ## Confidentialité (RGPD)
 

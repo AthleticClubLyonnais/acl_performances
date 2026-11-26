@@ -19,7 +19,6 @@ h1,h2,h3,.titre{font-family:var(--titre);font-weight:700;letter-spacing:.2px;tex
 header{background:var(--vert);color:#fff;position:relative}
 header{background:linear-gradient(115deg,#007377 0%,#006669 58%,#005a5d 100%);overflow:hidden}
 header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-62deg,rgba(255,255,255,.055) 0 2px,transparent 2px 46px);pointer-events:none}
-header::after{content:"";position:absolute;left:0;bottom:0;height:6px;width:100%;background:linear-gradient(90deg,var(--orange) 0 140px,var(--soleil) 140px 200px,transparent 200px)}
 .head-in{position:relative;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
 .logo{height:92px;width:auto;display:block;flex:none}
 .head-txt{flex:1 1 470px;min-width:260px;border-left:2px solid rgba(255,255,255,.35);padding-left:28px}
@@ -34,16 +33,12 @@ header::after{content:"";position:absolute;left:0;bottom:0;height:6px;width:100%
 h1{font-size:38px;line-height:1;margin-top:4px}
 .sous{margin-top:8px;opacity:.92;font-size:15px}
 nav{background:var(--vert-fonce)}
-nav .wrap{display:flex;gap:6px;overflow-x:auto}
-nav .wrap{padding-top:10px}
-nav button{font-family:var(--titre);text-transform:uppercase;font-weight:700;font-size:18px;letter-spacing:.6px;border:0;padding:10px 20px 8px;cursor:pointer;border-radius:10px 10px 0 0;white-space:nowrap;background:var(--t);color:var(--tc);opacity:.78;border-bottom:5px solid transparent;transition:opacity .15s,transform .15s}
-nav button:nth-child(1){--t:#c24323;--tc:#fff}
-nav button:nth-child(2){--t:#f2b134;--tc:#212121}
-nav button:nth-child(3){--t:#8fd0c5;--tc:#212121}
-nav button:nth-child(4){--t:#efe6d5;--tc:#212121}
-nav button:nth-child(5){--t:#fff;--tc:#005a5d}
-nav button:hover{opacity:1;transform:translateY(-2px)}
-nav button[aria-selected=true]{opacity:1;border-bottom-color:var(--vert-fonce);box-shadow:0 -3px 0 rgba(255,255,255,.55) inset}
+nav .wrap{display:flex;overflow-x:auto}
+nav .wrap{padding-top:12px;gap:6px}
+nav button{font-family:var(--titre);text-transform:uppercase;font-weight:700;font-size:18px;letter-spacing:.7px;border:0;padding:11px 22px 9px;cursor:pointer;border-radius:10px 10px 0 0;white-space:nowrap;background:var(--vert);color:#fff;transition:background .15s,color .15s}
+nav button:nth-child(even){background:var(--menthe);color:var(--vert-fonce)}
+nav button:hover{filter:brightness(1.07)}
+nav button[aria-selected=true]{background:var(--gris-clair);color:var(--vert-fonce);box-shadow:none}
 main{padding:20px 0 40px}
 section[hidden]{display:none}
 .barre{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:flex-end;background:#fff;border:1px solid var(--ligne);border-radius:10px;padding:14px 16px;margin-bottom:16px}
@@ -109,12 +104,31 @@ footer{color:var(--gris);font-size:12.5px;padding:0 0 30px}
 .legende{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--gris);margin-top:4px}
 .legende .tg{cursor:pointer;user-select:none}.legende .tg.off{opacity:.35;text-decoration:line-through}
 .legende span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c,var(--vert))}
-@media(max-width:600px){nav button{font-size:15px;padding:9px 12px 7px}.head-in{padding:16px 0 22px}.kpi .val{font-size:28px}}
+@media(max-width:600px){nav button{font-size:15px;padding:9px 12px 7px}.head-in{padding:16px 16px 22px}.kpi .val{font-size:28px}}
 .deux-c{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 @media(max-width:900px){.deux-c{grid-template-columns:1fr}}
 .sub{font-family:var(--titre);text-transform:uppercase;font-weight:600;font-size:14px;letter-spacing:.5px;color:var(--gris);margin:10px 0 2px}
 .ca{color:var(--vert)}.cb{color:var(--orange)}
 .pill{display:inline-block;border-radius:99px;padding:2px 10px;font-family:var(--titre);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:13px;color:#fff}
+.champ[hidden]{display:none}
+.rc-fam{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
+.rc-fam button{font-family:var(--titre);text-transform:uppercase;font-weight:700;font-size:18px;letter-spacing:.5px;border:2px solid var(--vert);background:#fff;color:var(--vert-fonce);border-radius:99px;padding:7px 18px;cursor:pointer}
+.rc-fam button small{font-family:var(--texte);font-weight:400;font-size:12.5px;opacity:.75;margin-left:4px;text-transform:none}
+.rc-fam button[aria-pressed=true]{background:var(--vert);color:#fff}
+.rc-fam button:hover{background:var(--vert-clair)}.rc-fam button[aria-pressed=true]:hover{background:var(--vert)}
+table.rc-grid{border-collapse:separate;border-spacing:0;font-size:14px}
+.rc-grid th{position:sticky;top:0;background:#fff;text-align:center;border-bottom:3px solid var(--vert);white-space:nowrap}
+.rc-grid th:first-child,.rc-grid td:first-child{position:sticky;left:0;background:#fff;text-align:left;z-index:1;min-width:150px;border-right:1px solid var(--ligne)}
+.rc-grid td.c{min-width:118px;max-width:150px;text-align:center;cursor:pointer;line-height:1.25;padding:6px 6px}
+.rc-grid td.c b{font-size:15.5px;display:block}
+.rc-grid td.c .s{font-size:11.5px;color:var(--gris);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-grid td.c.new{background:#fdf3d9}
+.rc-grid td.c.pdf b::after{content:" *";color:var(--gris);font-weight:400}
+.rc-grid td.c.vide{color:#b7c3c3;cursor:default}
+.rc-grid td.c:not(.vide):hover{background:var(--vert-clair)}
+.rc-grid tr.sep td{background:var(--vert-clair);font-family:var(--titre);text-transform:uppercase;font-weight:700;letter-spacing:.6px;color:var(--vert-fonce);padding:5px 8px;position:static}
+.rc-grid tr.sep td:first-child{position:static}
+.fchip{display:inline-block;background:var(--soleil);color:var(--noir);border-radius:99px;padding:2px 10px;font-size:13px;margin-right:6px}.fchip a{color:var(--noir);text-decoration:none;font-weight:700;margin-left:4px}
 @media print{nav,.barre{display:none}body{background:#fff}}
 </style>
 </head>
@@ -194,7 +208,7 @@ footer{color:var(--gris);font-size:12.5px;padding:0 0 30px}
     <div class="champ"><label>Comparer à</label><div class="seg" id="at-scope"><button data-v="cat" aria-pressed="true">Même catégorie</button><button data-v="all" aria-pressed="false">Toutes catégories</button></div></div>
     <div class="champ"><label>&nbsp;</label><button class="btn sec" id="at-cmp">Comparer avec un autre athlète</button></div>
   </div>
-  <div id="at-contenu"><div class="vide">Choisis un athlète pour voir ses meilleures performances, son rang au club et ses records personnels.</div></div>
+  <div id="at-contenu"><div class="vide">Choisis un athlète pour voir ses meilleures performances, son rang au club et ses PB.</div></div>
 </section>
 
 <section id="comparer" hidden>
@@ -205,25 +219,26 @@ footer{color:var(--gris);font-size:12.5px;padding:0 0 30px}
   <div id="cp-contenu"><div class="vide">Choisis deux athlètes du même sexe. Leurs performances sont recalées sur l'<b>année de catégorie</b> (BE1, BE2, MI1…) pour voir si l'un suit la trajectoire de l'autre, épreuve par épreuve.</div></div>
 </section>
 <section id="records" hidden>
+  <div class="rc-fam" id="rc-fam" role="tablist" aria-label="Famille d'épreuves"></div>
   <div class="barre">
     <div class="champ"><label>Sexe</label><div class="seg" id="rc-sexe"><button data-v="*" aria-pressed="true">Tous</button><button data-v="1" aria-pressed="false">Femmes</button><button data-v="0" aria-pressed="false">Hommes</button></div></div>
-    <div class="champ"><label>Type</label><div class="seg" id="rc-type"><button data-v="*" aria-pressed="true">Tous</button><button data-v="0" aria-pressed="false">Individuels</button><button data-v="1" aria-pressed="false">Relais</button></div></div>
-    <div class="champ"><label for="rc-grp">Discipline</label><select id="rc-grp"></select></div>
-    <div class="champ"><label for="rc-cat">Catégorie</label><select id="rc-cat"></select></div>
+    <div class="champ"><label>Catégories</label><div class="seg" id="rc-cats"><button data-v="j" aria-pressed="true">Jeunes &amp; seniors</button><button data-v="m" aria-pressed="false">Masters</button></div></div>
+    <div class="champ"><label>Affichage</label><div class="seg" id="rc-vue"><button data-v="grille" aria-pressed="true">Grille</button><button data-v="liste" aria-pressed="false">Liste</button></div></div>
     <div class="champ"><label for="rc-q">Recherche</label><input type="text" id="rc-q" placeholder="épreuve, athlète, lieu…" style="min-width:200px"></div>
+    <div class="champ" id="rc-filtres-box" hidden><label>Filtres actifs</label><div id="rc-filtres"></div></div>
   </div>
+  <div class="carte"><h2 id="rc-titre">Records</h2><p class="note" id="rc-note"></p><div class="tab-scroll" id="rc-table"></div></div>
   <div class="grille kpis" id="rc-kpis"></div>
   <div class="deux">
     <div class="carte"><h2>Records par année d'établissement</h2><p class="note">Cliquer sur une barre pour ne garder que les records de cette année.</p><div id="rc-annees" class="rel"></div></div>
     <div class="carte"><h2>Plus grands détenteurs</h2><p class="note">Records individuels. Cliquer sur un nom pour filtrer.</p><div id="rc-top" class="rel"></div></div>
   </div>
-  <div class="carte"><h2>Tableau des records</h2><p class="note" id="rc-note"></p><div class="tab-scroll" id="rc-table"></div></div>
 </section>
 <footer>
   <details><summary>Méthode, sources et limites</summary>
-  <p><b>Données</b> : exports SI-FFA des performances de l'ACL (1997-2026) et de l'AC Tassin (2020-2026), saison 2026/27 jusqu'au 22/11/2026, et classeur des records du 24/11/2026. Avant 2020, seul l'historique de l'AC Tassin est disponible ; avant 2003, rien.</p>
+  <p><b>Données</b> : exports SI-FFA des performances de l'AC Tassin de 2003 à 2019, puis de l'ACL et de ses sections (ACT, ACD, ACM) depuis 2020, saison 2026/27 jusqu'au 22/11/2026, et classeur des records du 24/11/2026. Avant 2020, seul l'historique de l'AC Tassin est disponible (les athlètes des autres sections n'y figurent pas) ; avant 2003, aucune donnée. Les sections ACD et ACM sont présentes respectivement à partir de 2020 et de 2025.</p>
   <p><b>Quantile</b> : part des performances (vent fort compris) de la même épreuve, du même sexe (et de la même catégorie si choisi) que la performance dépasse, les égalités comptant pour moitié. <b>Trajectoire par année de catégorie</b> : année de catégorie = saison (année de fin) moins année de naissance, soit BE1, BE2, MI1, MI2, CA1… (puis SE 23, SE 24… et Masters) ; au sein d'une année, les points suivent le déroulement de la saison de septembre à août. La bande grise est la zone où se situent 80 % des performances du club à ce stade de la saison (fenêtre glissante de quatre mois, au moins 10 performances), la ligne pointillée leur médiane ; elle se déplace donc avec la progression au fil de la saison. Les graphiques sont interactifs : survol, clic sur une barre ou une saison, légende cliquable. <b>Rang</b> : classement parmi les meilleures performances de chaque athlète.</p>
-  <p><b>Règles</b> : vent supérieur à +2,0 m/s (50 m à 200 m, haies, longueur, triple saut) : la performance est conservée mais exclue des records, classements et records personnels ; chronos manuels convertis en équivalent électronique ; salle et plein air séparés ; les sous-performances d'épreuves combinées comptent pour l'épreuve ; relais et totaux de points exclus. Les quantiles sont affichés à partir de 30 performances. <b>Records du club</b> : classeur des records du 24/11/2026 (PDF du club, vérifiés et mis à jour avec l'historique SI-FFA), y compris les records que l'historique ne permet pas de retrouver.</p>
+  <p><b>Règles</b> : vent supérieur à +2,0 m/s (50 m à 200 m, haies, longueur, triple saut) : la performance est conservée mais exclue des records, classements et PB ; chronos manuels convertis en équivalent électronique ; salle et plein air séparés ; les sous-performances d'épreuves combinées comptent pour l'épreuve ; relais et totaux de points exclus. Les quantiles sont affichés à partir de 30 performances. <b>Records du club</b> : classeur des records du 24/11/2026 (PDF du club, vérifiés et mis à jour avec l'historique SI-FFA), y compris les records que l'historique ne permet pas de retrouver.</p>
   <p>Page interne au club : elle contient des noms d'athlètes, dont des mineurs. À ne pas diffuser en dehors de l'ACL.</p></details>
 </footer>
 </main>
@@ -368,7 +383,7 @@ function renderSemaine(){
   kp('Records du club',fr(rec.length),'établis ou battus'+(egales?` · ${egales} égalé${egales>1?'s':''}`:''),'or');
   kp('Top 3 du club',fr(top3.length),'meilleurs de l\'histoire');
   kp('Top 10 du club',fr(top10.length),'parmi les athlètes');
-  kp('Records personnels',fr(pbs.length),'améliorés');
+  kp('PB',fr(pbs.length),'records personnels améliorés');
   const C=$('#sem-cartes');C.innerHTML='';
   if(!A.length){C.appendChild(el('div','vide','Aucune performance enregistrée cette semaine-là. Utilise ◀ ▶ ou le sélecteur de date.'));$('#sem-note').textContent='';return}
   let L=A.slice();
@@ -382,13 +397,13 @@ function renderSemaine(){
     const ev=EV[a.ev];const rec=record(a.ev,a.sx,a.cat);
     const c=el('div','perf'+(a.statut?' rec':''));c.tabIndex=0;c.setAttribute('role','button');
     const badges=[];
-    if(a.statut==='etabli')badges.push('<span class="badge or">Record du club</span>');
-    else if(a.statut==='battu')badges.push('<span class="badge or">Record battu</span>');
+    if(a.statut==='etabli')badges.push('<span class="badge or">Record club</span>');
+    else if(a.statut==='battu')badges.push('<span class="badge or">Record club</span>');
     else if(a.statut==='egal')badges.push('<span class="badge or">Égale le record</span>');
     if(!a.vent&&a.fiable&&a.p.rankA===1&&!a.statut)badges.push('<span class="badge top">N°1 du club</span>');
     else if(!a.vent&&a.fiable&&a.p.rankA<=3&&!a.statut)badges.push('<span class="badge top">Top 3 du club</span>');
     else if(!a.vent&&a.fiable&&a.p.rankA<=10&&!a.statut)badges.push('<span class="badge top">Top 10 du club</span>');
-    if(a.pb)badges.push('<span class="badge pb">Record perso</span>');
+    if(a.pb)badges.push('<span class="badge pb">PB</span>');
     if(a.vent)badges.push(`<span class="badge" style="background:#fff3cd;color:#7a5b00">Vent +${fr(a.vent,1)} m/s · non homologable</span>`);
     const portee=sem.cat==='cat'?`en ${a.cat}`:'toutes catégories';
     const jauge=a.fiable?`<div class="jauge"><i style="width:${a.p.pct.toFixed(1)}%"></i></div><div class="jl">Meilleure que <b>${fr(a.p.pct,1)} %</b> des perfs (${portee}, n = ${fr(a.p.n)})</div>${a.vent?'':`<div class="jl">${ordinal(a.p.rankA,a.sx===1)} ${a.sx===1?'meilleure':'meilleur'} athlète du club · ${ordinal(a.p.rank,true)} perf de l'histoire</div>`}`
@@ -737,28 +752,59 @@ function renderComparer(){
 /* ---------- onglet RECORDS DU CLUB (tout le classeur, y compris les records absents de l'historique SI-FFA) ---------- */
 const RA=D.recall||[];
 const GRP_ORDRE=['Sprint','Haies','1/2 Fond','Fond et Hors Stade','Marche','Sauts','Lancers','Epreuves Combinées','Sprint - Relais'];
-const CAT_ORDRE=['EA','PO','BE','MI','CA','JU','ES','SE','VE','M0','M1','M2','M3','M4','M5','M6','M7'];
-const rcOrd=new Map();RA.forEach((r,i)=>{const k=r[0]+'|'+r[1];if(!rcOrd.has(k))rcOrd.set(k,rcOrd.size)});
+const CAT_J=['EA','PO','BE','MI','CA','JU','ES','SE'],CAT_M=['VE','M0','M1','M2','M3','M4','M5','M6','M7'];
+const FAMS=[['courses','Courses',g=>['Sprint','Haies','1/2 Fond','Fond et Hors Stade'].includes(g)],['marche','Marche',g=>g==='Marche'],['sauts','Sauts',g=>g==='Sauts'],['lancers','Lancers',g=>g==='Lancers'],['combi','Combinées',g=>g==='Epreuves Combinées'],['relais','Relais',null]];
+const famDe=r=>r[10]||r[0]==='Sprint - Relais'?'relais':(FAMS.find(f=>f[2]&&f[2](r[0]))||[])[0]||'courses';
+const rcOrd=new Map();RA.forEach(r=>{const k=r[0]+'|'+r[1];if(!rcOrd.has(k))rcOrd.set(k,rcOrd.size)});
 const rcAn=r=>+String(r[6]).slice(0,4)||0;
-const rcCat=c=>c==='VE'?'Masters (VE)':c;
-const rcF={sx:'*',type:'*',grp:'*',cat:'*',q:'',yr:null,ath:null,tri:'ep',tous:false};
+const rcCat=c=>c==='VE'?'Masters':c;
+const rcF={fam:'courses',sx:'*',cats:'j',vue:'grille',q:'',yr:null,ath:null};
 const nk=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[-']/g,' ');
-function rcFiltre(){const q=nk(rcF.q).trim();return RA.filter(r=>(rcF.sx==='*'||String(r[2])===rcF.sx)&&(rcF.type==='*'||String(r[10])===rcF.type)&&(rcF.grp==='*'||r[0]===rcF.grp)&&(rcF.cat==='*'||r[3]===rcF.cat)&&(!rcF.yr||rcAn(r)===rcF.yr)&&(!rcF.ath||(!r[10]&&r[5]===rcF.ath))&&(!q||nk(r[1]+' '+r[5]+' '+r[7]+' '+r[0]).includes(q)))}
-function rcOptions(){
-  const g=$('#rc-grp'),c=$('#rc-cat');if(g.options.length)return;
-  g.appendChild(new Option('Toutes','*'));GRP_ORDRE.filter(x=>RA.some(r=>r[0]===x)).forEach(x=>g.appendChild(new Option(x==='Sprint - Relais'?'Relais':x,x)));
-  c.appendChild(new Option('Toutes','*'));CAT_ORDRE.filter(x=>RA.some(r=>r[3]===x)).forEach(x=>c.appendChild(new Option(rcCat(x),x)));
-  g.onchange=e=>{rcF.grp=e.target.value;renderRecords()};c.onchange=e=>{rcF.cat=e.target.value;renderRecords()};
-  $('#rc-q').oninput=e=>{rcF.q=e.target.value;rcF.tous=false;renderRecords()};
-  seg('#rc-sexe',v=>{rcF.sx=v;renderRecords()});seg('#rc-type',v=>{rcF.type=v;renderRecords()});
-}
-function rcBadge(r){return r[8]==='v'?'<span class="badge top" title="Record confirmé par l\'historique SI-FFA">SI-FFA</span>':r[8]==='n'?'<span class="badge" style="background:var(--sable);color:var(--noir)" title="Record des PDF du club, absent de l\'historique SI-FFA disponible (avant 2003 ou club non extrait)">PDF seul</span>':'<span class="badge pb" title="Relais ou épreuve non vérifiable avec l\'historique">PDF</span>'}
-function rcDate(r){const e=r[9];return e?e:fmtMois(r[6])}
+const estM=c=>c==='VE'||/^M\d$/.test(c);
+function rcBase(){const q=nk(rcF.q).trim();return RA.filter(r=>(rcF.sx==='*'||String(r[2])===rcF.sx)&&(rcF.cats==='m'?estM(r[3]):!estM(r[3]))&&(!q||nk(r[1]+' '+r[5]+' '+r[7]+' '+r[0]).includes(q)))}
+const rcFiltre=base=>base.filter(r=>famDe(r)===rcF.fam&&(!rcF.yr||rcAn(r)===rcF.yr)&&(!rcF.ath||(!r[10]&&nomRec(r[5])===rcF.ath)))
+function rcBadge(r){return r[8]==='v'?'<span class="badge top" title="Record confirmé par l\'historique SI-FFA">SI-FFA</span>':r[8]==='n'?'<span class="badge" style="background:var(--sable);color:var(--noir)" title="Record des PDF du club, absent de l\'historique SI-FFA disponible">PDF seul</span>':'<span class="badge pb" title="Relais ou épreuve non vérifiable avec l\'historique">PDF</span>'}
+const rcDate=r=>r[9]?r[9]:fmtMois(r[6]);
+const abrege=n=>{const p=String(n).trim().split(/\s+/);return p.length<2?n:p[0]+' '+p.slice(1).join(' ')};
+function ouvrirEpreuve(r){const id=EV.findIndex(e=>e.nom===r[1]);if(id<0||r[2]>1||r[10])return false;ep.ev=id;ep.sx=r[2];ep.cat=CATS.includes(r[3])?r[3]:'*';ep.test=null;$('#ep-test').value='';showOnglet('epreuve');window.scrollTo({top:0});return true}
 function renderRecords(){
-  rcOptions();const L=rcFiltre();
-  setSeg('#rc-sexe',rcF.sx);setSeg('#rc-type',rcF.type);$('#rc-grp').value=rcF.grp;$('#rc-cat').value=rcF.cat;
+  // familles
+  const base=rcBase();const nf=new Map();base.filter(r=>(!rcF.yr||rcAn(r)===rcF.yr)&&(!rcF.ath||(!r[10]&&nomRec(r[5])===rcF.ath))).forEach(r=>nf.set(famDe(r),(nf.get(famDe(r))||0)+1));
+  const fb=$('#rc-fam');fb.innerHTML=FAMS.map(f=>`<button role="tab" data-f="${f[0]}" aria-pressed="${rcF.fam===f[0]}">${f[1]}<small>${nf.get(f[0])||0}</small></button>`).join('');
+  fb.querySelectorAll('button').forEach(b=>b.onclick=()=>{rcF.fam=b.dataset.f;renderRecords()});
+  setSeg('#rc-sexe',rcF.sx);setSeg('#rc-cats',rcF.cats);setSeg('#rc-vue',rcF.vue);
+  const L=rcFiltre(base);
+  // filtres actifs
+  const fa=[];if(rcF.yr)fa.push(`<span class="fchip">année ${rcF.yr}<a href="#" data-x="yr">✕</a></span>`);if(rcF.ath)fa.push(`<span class="fchip">${esc(rcF.ath)}<a href="#" data-x="ath">✕</a></span>`);
+  $('#rc-filtres-box').hidden=!fa.length;$('#rc-filtres').innerHTML=fa.join('');$('#rc-filtres').querySelectorAll('a[data-x]').forEach(a=>a.onclick=e=>{e.preventDefault();rcF[a.dataset.x]=null;renderRecords()});
+  const fam=FAMS.find(f=>f[0]===rcF.fam);
+  $('#rc-titre').textContent=`Records · ${fam[1]}${rcF.sx==='*'?'':rcF.sx==='1'?' · Femmes':' · Hommes'}${rcF.cats==='m'?' · Masters':''}`;
+  $('#rc-note').innerHTML=`${fr(L.length)} record${L.length>1?'s':''}. ${rcF.vue==='grille'&&rcF.fam!=='relais'?'<span style="background:#fdf3d9;padding:1px 6px;border-radius:4px">Fond jaune</span> : établi en 2025 ou après · * : record des PDF absent de l\'historique SI-FFA, conservé tel quel · ':''}Cliquer sur un record ouvre l'épreuve. Pastilles : <span class="badge top">SI-FFA</span> confirmé par l'historique, <span class="badge" style="background:var(--sable);color:var(--noir)">PDF seul</span> non retrouvé, <span class="badge pb">PDF</span> relais ou non vérifiable.`;
+  const T=$('#rc-table');
+  if(!L.length)T.innerHTML='<div class="vide">Aucun record pour cette sélection. Essaie un autre sexe, « Masters » ou efface la recherche.</div>';
+  else if(rcF.vue==='grille'&&rcF.fam!=='relais'){
+    const cats=(rcF.cats==='m'?CAT_M:CAT_J).filter(c=>L.some(r=>r[3]===c));
+    const rows=new Map();L.forEach(r=>{const k=r[0]+'|'+r[1]+'|'+r[2];(rows.get(k)||rows.set(k,[]).get(k)).push(r)});
+    const keys=[...rows.keys()].sort((a,b)=>{const ra=rows.get(a)[0],rb=rows.get(b)[0];return (GRP_ORDRE.indexOf(ra[0])-GRP_ORDRE.indexOf(rb[0]))||(rcOrd.get(ra[0]+'|'+ra[1])-rcOrd.get(rb[0]+'|'+rb[1]))||(ra[2]-rb[2])});
+    let h='<table class="rc-grid"><thead><tr><th>Épreuve</th>'+cats.map(c=>`<th>${rcCat(c)}</th>`).join('')+'</tr></thead><tbody>';let g0=null;
+    keys.forEach(k=>{const rr=rows.get(k),r0=rr[0];
+      if(rcF.fam==='courses'&&r0[0]!==g0){g0=r0[0];h+=`<tr class="sep"><td colspan="${cats.length+1}">${esc(g0==='1/2 Fond'?'Demi-fond':g0==='Fond et Hors Stade'?'Fond et hors stade':g0)}</td></tr>`}
+      h+=`<tr><td><b>${esc(r0[1])}</b> <span class="chip">${r0[2]===1?'F':r0[2]===0?'H':'Mixte'}</span></td>`;
+      cats.forEach(c=>{const r=rr.find(x=>x[3]===c);if(!r){h+='<td class="c vide">·</td>';return}
+        h+=`<td class="c${rcAn(r)>=2025?' new':''}${r[8]==='n'?' pdf':''}" data-i="${RA.indexOf(r)}" title="${esc(r[1]+' · '+rcCat(r[3])+'\n'+r[4]+' · '+r[5]+'\n'+rcDate(r)+(r[7]?' · '+r[7]:''))}"><b>${esc(r[4])}</b><div class="s">${esc(abrege(nomRec(r[5])))}</div><div class="s">${rcAn(r)||''}</div></td>`});
+      h+='</tr>'});
+    T.innerHTML=h+'</tbody></table>';
+    T.querySelectorAll('td.c[data-i]').forEach(td=>td.onclick=()=>ouvrirEpreuve(RA[+td.dataset.i]));
+  }else{
+    const S=L.slice().sort((a,b)=>(GRP_ORDRE.indexOf(a[0])-GRP_ORDRE.indexOf(b[0]))||(rcOrd.get(a[0]+'|'+a[1])-rcOrd.get(b[0]+'|'+b[1]))||(a[2]-b[2])||((CAT_J.concat(CAT_M)).indexOf(a[3])-(CAT_J.concat(CAT_M)).indexOf(b[3])));
+    let h='<table><thead><tr><th>Épreuve</th><th>Cat.</th><th class="num">Performance</th><th>Athlète(s)</th><th>Date</th><th>Lieu</th><th>Source</th></tr></thead><tbody>';
+    S.forEach(r=>{const sx=r[2]===1?'F':r[2]===0?'H':'Mixte';
+      h+=`<tr class="clic" data-i="${RA.indexOf(r)}"><td><b>${esc(r[1])}</b> <span class="chip">${sx}</span></td><td>${rcCat(r[3])}</td><td class="num"><b>${esc(r[4])}</b></td><td style="max-width:340px">${esc(r[10]?r[5]:nomRec(r[5]))}</td><td style="white-space:nowrap">${esc(rcDate(r))}</td><td>${esc(r[7])}</td><td>${rcBadge(r)}</td></tr>`});
+    T.innerHTML=h+'</tbody></table>';
+    T.querySelectorAll('tr.clic').forEach(tr=>tr.onclick=()=>ouvrirEpreuve(RA[+tr.dataset.i]));
+  }
   // KPI
-  const ind=L.filter(r=>!r[10]);const dets=new Set(ind.map(r=>r[5]));
+  const ind=L.filter(r=>!r[10]);const dets=new Set(ind.map(r=>nomRec(r[5])));
   const ans=L.map(rcAn).filter(Boolean);const recents=L.filter(r=>rcAn(r)>=2020).length;
   const k=$('#rc-kpis');k.innerHTML='';
   const kp=(lib,v,det,cls)=>{const d=el('div','kpi '+(cls||''));d.innerHTML=`<div class="lib">${lib}</div><div class="val">${v}</div><div class="det">${det||''}</div>`;k.appendChild(d)};
@@ -766,11 +812,11 @@ function renderRecords(){
   kp('Détenteurs',fr(dets.size),'athlètes avec au moins un record individuel');
   kp('Plus ancien',ans.length?Math.min(...ans):'—','année d\'établissement');
   kp('Depuis 2020',fr(recents),L.length?fr(100*recents/L.length,0)+' % des records':'');
-  kp('Absents de SI-FFA',fr(L.filter(r=>r[8]==='n').length),'records des PDF non retrouvés dans l\'historique');
+  kp('Absents de SI-FFA',fr(L.filter(r=>r[8]==='n').length),'records des PDF non retrouvés');
   // année
   const hostA=$('#rc-annees');hostA.innerHTML='';
-  const base=RA.filter(r=>(rcF.sx==='*'||String(r[2])===rcF.sx)&&(rcF.type==='*'||String(r[10])===rcF.type)&&(rcF.grp==='*'||r[0]===rcF.grp)&&(rcF.cat==='*'||r[3]===rcF.cat));
-  const cA=new Map();base.forEach(r=>{const y=rcAn(r);if(y)cA.set(y,(cA.get(y)||0)+1)});
+  const basF=base.filter(r=>famDe(r)===rcF.fam);
+  const cA=new Map();basF.forEach(r=>{const y=rcAn(r);if(y)cA.set(y,(cA.get(y)||0)+1)});
   if(cA.size){const y0=Math.min(...cA.keys()),y1=Math.max(...cA.keys());const W=Math.max(300,hostA.clientWidth||560),H=250,m={l:34,r:8,t:10,b:30},iw=W-m.l-m.r,ih=H-m.t-m.b;
     const ym=Math.max(...cA.values());const nb=y1-y0+1,bw=iw/nb;const Y=c=>m.t+ih-c/ym*ih;
     let sv=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Nombre de records par année">`;
@@ -782,42 +828,22 @@ function renderRecords(){
     const svg=hostA.querySelector('svg');svg.style.cursor='pointer';const yAt=ev=>{const r=svg.getBoundingClientRect();const px=(ev.clientX-r.left)*W/r.width;const y=y0+Math.floor((px-m.l)/bw);return y>=y0&&y<=y1?y:null};
     svg.onmousemove=ev=>{const y=yAt(ev);svg.querySelectorAll('rect').forEach(q=>q.style.opacity=(y&&+q.dataset.y!==y)?.5:1);if(!y||!cA.get(y)){untip(hostA);return}const hb=hostA.getBoundingClientRect();tip(hostA,`<b>${y}</b> · ${cA.get(y)} record${cA.get(y)>1?'s':''}<br><span style="color:#8fd0c5">cliquer pour filtrer</span>`,ev.clientX-hb.left,ev.clientY-hb.top)};
     svg.onmouseleave=()=>{untip(hostA);svg.querySelectorAll('rect').forEach(q=>q.style.opacity=1)};
-    svg.onclick=ev=>{const y=yAt(ev);if(!y||!cA.get(y))return;rcF.yr=rcF.yr===y?null:y;rcF.tous=false;renderRecords()}}
+    svg.onclick=ev=>{const y=yAt(ev);if(!y||!cA.get(y))return;rcF.yr=rcF.yr===y?null:y;renderRecords()}}
   else hostA.innerHTML='<div class="vide">Aucun record pour cette sélection.</div>';
   // top détenteurs
   const hostT=$('#rc-top');hostT.innerHTML='';
-  const cT=new Map();base.filter(r=>!r[10]&&(!rcF.yr||rcAn(r)===rcF.yr)).forEach(r=>cT.set(r[5],(cT.get(r[5])||0)+1));
+  const cT=new Map();basF.filter(r=>!r[10]&&(!rcF.yr||rcAn(r)===rcF.yr)).forEach(r=>{const n=nomRec(r[5]);cT.set(n,(cT.get(n)||0)+1)});
   const top=[...cT.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0],'fr')).slice(0,12);
   if(top.length){const W=Math.max(300,hostT.clientWidth||400),rh=22,H=top.length*rh+8,lw=Math.min(150,W*.4);const mx=top[0][1];
     let sv=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Détenteurs de records">`;
     top.forEach(([n,c],i)=>{const y=4+i*rh,w=(W-lw-40)*c/mx;const on=rcF.ath===n;
       sv+=`<g data-n="${esc(n)}" style="cursor:pointer"><rect x="0" y="${y-2}" width="${W}" height="${rh}" fill="transparent"/><text x="${lw-6}" y="${y+13}" text-anchor="end" style="fill:#212121;${on?'font-weight:700':''}">${esc(n.length>22?n.slice(0,21)+'…':n)}</text><rect x="${lw}" y="${y+1}" width="${Math.max(2,w)}" height="${rh-6}" rx="2" fill="${on?'#005a5d':'#007377'}"/><text x="${lw+w+5}" y="${y+13}" style="fill:#212121;font-weight:700">${c}</text></g>`});
     hostT.innerHTML=sv+'</svg>';
-    hostT.querySelectorAll('g[data-n]').forEach(g=>g.onclick=()=>{const n=g.dataset.n;rcF.ath=rcF.ath===n?null:n;rcF.tous=false;renderRecords()})}
+    hostT.querySelectorAll('g[data-n]').forEach(g=>g.onclick=()=>{const n=g.dataset.n;rcF.ath=rcF.ath===n?null:n;renderRecords()})}
   else hostT.innerHTML='<div class="vide">Aucun record individuel.</div>';
-  // tableau
-  const tri=rcF.tri;const S=L.slice().sort((a,b)=>{
-    if(tri==='date')return (rcAn(b)-rcAn(a))||String(b[6]).localeCompare(String(a[6]));
-    if(tri==='ath')return String(a[5]).localeCompare(String(b[5]),'fr');
-    const ga=GRP_ORDRE.indexOf(a[0])-GRP_ORDRE.indexOf(b[0]);if(ga)return ga;
-    const oa=rcOrd.get(a[0]+'|'+a[1])-rcOrd.get(b[0]+'|'+b[1]);if(oa)return oa;
-    if(a[2]!==b[2])return a[2]-b[2];return CAT_ORDRE.indexOf(a[3])-CAT_ORDRE.indexOf(b[3])});
-  const lim=rcF.tous?S.length:250;
-  let ft=[];if(rcF.yr)ft.push(`année ${rcF.yr} <a href="#" data-x="yr">✕</a>`);if(rcF.ath)ft.push(`${esc(rcF.ath)} <a href="#" data-x="ath">✕</a>`);
-  $('#rc-note').innerHTML=`${fr(L.length)} record${L.length>1?'s':''}${ft.length?' · filtre : '+ft.join(', '):''}. Les records dont la pastille est <span class="badge top">SI-FFA</span> sont confirmés par l'historique des performances ; <span class="badge" style="background:var(--sable);color:var(--noir)">PDF seul</span> signale un record des PDF du club absent de l'historique disponible (conservé tel quel) ; <span class="badge pb">PDF</span> : relais et épreuves non vérifiables. Cliquer sur une ligne ouvre l'épreuve.`;
-  $('#rc-note').querySelectorAll('a[data-x]').forEach(a=>a.onclick=e=>{e.preventDefault();rcF[a.dataset.x]=null;renderRecords()});
-  const th=(k,l)=>`<th style="cursor:pointer" data-t="${k}">${l}${tri===k?' ▾':''}</th>`;
-  let h=`<table><thead><tr>${th('ep','Épreuve')}<th>Cat.</th><th class="num">Performance</th>${th('ath','Athlète(s)')}${th('date','Date')}<th>Lieu</th><th>Source</th></tr></thead><tbody>`;
-  S.slice(0,lim).forEach((r,i)=>{const sx=r[2]===1?'F':r[2]===0?'H':'Mixte';
-    h+=`<tr class="clic" data-i="${RA.indexOf(r)}"><td><b>${esc(r[1])}</b> <span class="chip">${sx}</span></td><td>${rcCat(r[3])}</td><td class="num"><b>${esc(r[4])}</b></td><td style="max-width:340px">${esc(r[10]?r[5]:nomRec(r[5]))}</td><td style="white-space:nowrap">${esc(rcDate(r))}</td><td>${esc(r[7])}</td><td>${rcBadge(r)}</td></tr>`});
-  h+='</tbody></table>';if(S.length>lim)h+=`<p style="text-align:center"><button class="btn sec" id="rc-tous">Afficher les ${fr(S.length)} lignes</button></p>`;
-  $('#rc-table').innerHTML=h;
-  $('#rc-table').querySelectorAll('th[data-t]').forEach(x=>x.onclick=()=>{rcF.tri=x.dataset.t;renderRecords()});
-  const bt=$('#rc-tous');if(bt)bt.onclick=()=>{rcF.tous=true;renderRecords()};
-  $('#rc-table').querySelectorAll('tr.clic').forEach(tr=>tr.onclick=()=>{const r=RA[+tr.dataset.i];const id=EV.findIndex(e=>e.nom===r[1]);if(id<0||r[2]>1)return;
-    ep.ev=id;ep.sx=r[2];ep.cat=CATS.includes(r[3])?r[3]:'*';ep.test=null;$('#ep-test').value='';showOnglet('epreuve');window.scrollTo({top:0})});
 }
-
+seg('#rc-sexe',v=>{rcF.sx=v;renderRecords()});seg('#rc-cats',v=>{rcF.cats=v;renderRecords()});seg('#rc-vue',v=>{rcF.vue=v;renderRecords()});
+$('#rc-q').oninput=e=>{rcF.q=e.target.value;if(rcF.q.trim()){const q=nk(rcF.q).trim();const bf=rcBase();if(!bf.some(r=>famDe(r)===rcF.fam)){const f=bf[0]&&famDe(bf[0]);if(f)rcF.fam=f}}renderRecords()};
 /* ---------- démarrage ---------- */
 const h0=(location.hash||'').slice(1);
 try{history.scrollRestoration='manual'}catch(e){}
