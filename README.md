@@ -2,6 +2,8 @@
 
 Tableau de bord de l'Athletic Club du Lyonnais : performances de la semaine, distribution historique épreuve par épreuve, fiche athlète, comparaison de trajectoires par année de catégorie et records du club.
 
+**Page en ligne : https://gperrin-aclyonnais.github.io/performances/**
+
 **Usage interne au club.** Le tableau de bord contient des noms d'athlètes, dont des mineurs. Voir la section Confidentialité avant toute publication.
 
 ## Contenu du dépôt
@@ -22,7 +24,9 @@ Ouvrir `site/index.html` dans un navigateur (double-clic). Aucun serveur ni conn
 
 1. Pousser le dépôt sur GitHub (branche `main`).
 2. Dans **Settings → Pages**, choisir **Source : GitHub Actions**.
-3. Chaque *push* qui modifie `site/` déclenche le workflow `Déploiement GitHub Pages` ; l'adresse s'affiche à la fin de l'exécution (onglet **Actions**).
+3. Chaque *push* qui modifie `site/` déclenche le workflow `Déploiement GitHub Pages` ; la page est disponible à l'adresse **https://gperrin-aclyonnais.github.io/performances/** (rappelée aussi à la fin de l'exécution, onglet **Actions**).
+
+Si le déploiement échoue avec « No artifacts named github-pages were found », vérifier que le workflow utilise `actions/upload-pages-artifact@v4`, puis relancer avec **Re-run all jobs**.
 
 ## Mise à jour des données
 
