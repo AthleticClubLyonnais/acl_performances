@@ -197,7 +197,8 @@ table.rc-grid{border-collapse:separate;border-spacing:0;font-size:14px}
   #at-contenu .carte{zoom:.78}
   #at-contenu .deux-c svg{max-height:185px;width:100%}
   #at-contenu h2,#at-contenu h3{break-after:avoid}
-  #at-contenu>.carte:nth-child(n+12){display:none}
+  #at-contenu>.carte:nth-child(n+13){display:none}
+  #at-fam,#cp-contenu .rc-fam{display:none!important}
 }
 </style>
 </head>
@@ -417,11 +418,16 @@ const ordinal=(n,f)=>n===1?(f?'1re':'1er'):n+'e';
 
 /* ---------- interface commune ---------- */
 let onglet='semaine';
+let histInit=false,histRestore=false;
+function snap(){if(histInit&&!histRestore)try{history.replaceState({o:onglet,ep:Object.assign({},ep),at:atSel},'','#'+onglet)}catch(e){}}
 function showOnglet(o){
-  onglet=o;$$('#onglets button').forEach(b=>b.setAttribute('aria-selected',b.dataset.onglet===o));
+  onglet=o;
+  if(!histRestore){const st={o,ep:Object.assign({},ep),at:atSel},h=history.state;
+    const same=h&&h.o===o&&h.at===atSel&&JSON.stringify(h.ep)===JSON.stringify(st.ep);
+    if(!same){try{if(histInit)history.pushState(st,'','#'+o);else history.replaceState(st,'','#'+o)}catch(e){}}histInit=true}
+$$('#onglets button').forEach(b=>b.setAttribute('aria-selected',b.dataset.onglet===o));
   ['semaine','epreuve','athlete','comparer','records'].forEach(id=>{$('#'+id).hidden=id!==o});
   if(o==='semaine')renderSemaine();else if(o==='epreuve')renderEpreuve();else if(o==='athlete')renderAthlete();else if(o==='records')renderRecords();else renderComparer();
-  history.replaceState(null,'','#'+o);
   try{const s=document.querySelector('#onglets [aria-selected=true]');const w=document.querySelector('#onglets');w.scrollTo({left:s.offsetLeft-12,behavior:'smooth'})}catch(e){}
 }
 $$('#onglets button').forEach(b=>b.onclick=()=>showOnglet(b.dataset.onglet));
@@ -561,6 +567,7 @@ function remplirCat(){
 function nice(lo,hi,n){const span=hi-lo||1,raw=span/n;const p=Math.pow(10,Math.floor(Math.log10(raw)));const f=raw/p;const st=(f<1.5?1:f<3?2:f<7?5:10)*p;
   const t=[];for(let v=Math.ceil(lo/st)*st;v<=hi+1e-9;v+=st)t.push(+v.toFixed(10));return {t,st}}
 function renderEpreuve(){
+  if(onglet==='epreuve')snap();
   remplirEv();remplirCat();setSeg('#ep-sexe',ep.sx);setSeg('#ep-mode',ep.mode);
   const e=EV[ep.ev];const cat=ep.cat==='*'?null:ep.cat;
   const s=stat(ep.ev,ep.sx,cat);
@@ -698,6 +705,7 @@ const noms=D.athletes.map((n,i)=>({n,i,k:n.toLowerCase().normalize('NFD').replac
 $('#at-liste').innerHTML=noms.filter(a=>parAth.has(a.i)).sort((a,b)=>a.n.localeCompare(b.n,'fr')).map(a=>`<option value="${esc(a.n)}">`).join('');
 let atSel=null;
 function renderAthlete(){
+  if(onglet==='athlete')snap();
   const box=$('#at-contenu');
   if(atSel==null){return}
   const idx=parAth.get(atSel)||[];const nom=D.athletes[atSel];
@@ -706,15 +714,19 @@ function renderAthlete(){
     const bi=l.reduce((a,b)=>(mn?R[b][3]<R[a][3]:R[b][3]>R[a][3])?b:a);const r=R[bi];
     const s=stat(ev,sx,null),p=position(s,gd(ev,r[3]));const rc=record(ev,sx,r[2]);let statut='';
     if(rc){const dd=gd(ev,r[3])-gd(ev,rc[4]);statut=dd>1e-9?'battu':Math.abs(dd)<1e-9?'egal':''}
-    return {ev,sx,bi,r,p,n:l.length,statut,fiable:s.n>=MIN_N}}).sort((a,b)=>b.p.pct-a.p.pct);
+    return {ev,sx,bi,r,p,n:l.length,statut,fiable:s.n>=MIN_N}})
+  .sort((a,b)=>evRank[a.ev]-evRank[b.ev]||a.sx-b.sx);
+  const nbF=new Map();lignes.forEach(l=>nbF.set(EVF[l.ev],(nbF.get(EVF[l.ev])||0)+1));if(atFam!=='*'&&!nbF.has(atFam))atFam='*';
+  const LG=atFam==='*'?lignes:lignes.filter(l=>EVF[l.ev]===atFam);
   const sais=idx.map(i=>saison(R[i][4]));
   const recs0=lignes.filter(l=>l.statut).length;
   let h=`<div class="grille kpis"><div class="kpi"><div class="lib">Performances</div><div class="val">${fr(idx.length)}</div><div class="det">saisons ${Math.min(...sais)-1}/${String(Math.min(...sais)).slice(2)} à ${Math.max(...sais)-1}/${String(Math.max(...sais)).slice(2)}</div></div><div class="kpi"><div class="lib">Épreuves</div><div class="val">${lignes.length}</div></div><div class="kpi or"><div class="lib">Records du club</div><div class="val">${recs0}</div></div><div class="kpi"><div class="lib">Top 10 du club</div><div class="val">${lignes.filter(l=>l.fiable&&l.p.rankA<=10).length}</div><div class="det">épreuves (toutes catégories)</div></div></div>`;
-  h+=`<div class="carte"><h2>${esc(nom)}</h2><p class="note">Meilleure performance par épreuve, classée par position dans la distribution du club (toutes catégories). Clique sur une ligne pour voir l'épreuve.</p><div class="tab-scroll"><table><thead><tr><th>Épreuve</th><th class="num">Meilleure perf</th><th>Date</th><th class="num">Quantile</th><th class="num">Rang</th><th class="num">Nb perfs</th></tr></thead><tbody>`;
-  lignes.forEach((l,k)=>{h+=`<tr class="clic" data-k="${k}"><td><b>${esc(EV[l.ev].nom)}</b> <span class="chip">${l.sx===1?'F':'H'} · ${l.r[2]}</span></td><td class="num"><b>${fmtPerf(l.ev,l.r[3])}</b>${l.statut?' <span class="badge or">Record</span>':''}</td><td>${fmtDateC(l.r[4])}</td><td class="num">${l.fiable?fr(l.p.pct,1)+' %':'—'}</td><td class="num">${l.fiable?ordinal(l.p.rankA,l.sx===1)+' / '+fr(l.p.na):'—'}</td><td class="num">${l.n}</td></tr>`});
+  h+=famBtns('at-fam',atFam,nbF)+`<div class="carte"><h2>${esc(nom)}</h2><p class="note">Meilleure performance par épreuve, dans l'ordre des records (courses, marche, sauts, lancers) ; quantile = position dans la distribution du club (toutes catégories). Clique sur une ligne pour voir l'épreuve.</p><div class="tab-scroll"><table><thead><tr><th>Épreuve</th><th class="num">Meilleure perf</th><th>Date</th><th class="num">Quantile</th><th class="num">Rang</th><th class="num">Nb perfs</th></tr></thead><tbody>`;
+  LG.forEach((l,k)=>{h+=`<tr class="clic" data-k="${k}"><td><b>${esc(EV[l.ev].nom)}</b> <span class="chip">${l.sx===1?'F':'H'} · ${l.r[2]}</span></td><td class="num"><b>${fmtPerf(l.ev,l.r[3])}</b>${l.statut?' <span class="badge or">Record</span>':''}</td><td>${fmtDateC(l.r[4])}</td><td class="num">${l.fiable?fr(l.p.pct,1)+' %':'—'}</td><td class="num">${l.fiable?ordinal(l.p.rankA,l.sx===1)+' / '+fr(l.p.na):'—'}</td><td class="num">${l.n}</td></tr>`});
   box.innerHTML=h+'</tbody></table></div></div>';
-  box.querySelectorAll('tr.clic').forEach(t=>t.onclick=()=>{const l=lignes[+t.dataset.k];ep.sx=l.sx;ep.ev=l.ev;ep.cat=l.r[2];ep.test=l.r[3];showOnglet('epreuve')});
-  renderCartesAthlete(box,lignes,byEv);
+  box.querySelectorAll('tr.clic').forEach(t=>t.onclick=()=>{const l=LG[+t.dataset.k];ep.sx=l.sx;ep.ev=l.ev;ep.cat=l.r[2];ep.test=l.r[3];showOnglet('epreuve')});
+  box.querySelectorAll('#at-fam button').forEach(b=>b.onclick=()=>{atFam=b.dataset.f;renderAthlete()});
+  renderCartesAthlete(box,LG,byEv);
 }
 
 $('#at-pdf').onclick=()=>{if(atSel==null){alert("Choisis d'abord un athlète.");return}
@@ -817,7 +829,7 @@ function renderCartesAthlete(box,lignes,byEv){
   const sub=el('h2','titre','Épreuve par épreuve');sub.style.cssText='font-size:26px;color:var(--vert-fonce);margin:18px 0 10px';box.appendChild(sub);
   const nom=D.athletes[atSel];
   const todo=[];
-  lignes.slice().sort((a,b)=>b.n-a.n).forEach(l=>{
+  lignes.slice().sort((a,b)=>evRank[a.ev]-evRank[b.ev]||a.sx-b.sx).forEach(l=>{
     const e=EV[l.ev];const k=l.ev*2+l.sx;const perfs=byEv.get(k)||[];const cat=atScope==='cat'?l.r[2]:null;
     const s=stat(l.ev,l.sx,cat);const x=gd(l.ev,l.r[3]);const p=position(s,x);
     const rc=cat?recordE(l.ev,l.sx,cat):null;const recG=rc?gd(l.ev,rc[4]):null;
@@ -843,7 +855,9 @@ function renderComparer(){
   const A=cmp.a,B=cmp.b;const na=D.athletes[A],nb=D.athletes[B];
   if(!BIRTH[A]||!BIRTH[B]){box.innerHTML='<div class="vide">Année de naissance inconnue pour l\'un des deux : comparaison par année de catégorie impossible.</div>';return}
   const ma=perfsValides(A),mb=perfsValides(B);
-  const communs=[...ma.keys()].filter(k=>mb.has(k)).sort((p,q)=>Math.min(mb.get(q).length,ma.get(q).length)-Math.min(mb.get(p).length,ma.get(p).length));
+  const communsAll=[...ma.keys()].filter(k=>mb.has(k)).sort((p,q)=>evRank[p>>1]-evRank[q>>1]||p-q);
+  const nbC=new Map();communsAll.forEach(k=>nbC.set(EVF[k>>1],(nbC.get(EVF[k>>1])||0)+1));if(cpFam!=='*'&&!nbC.has(cpFam))cpFam='*';
+  const communs=cpFam==='*'?communsAll:communsAll.filter(k=>EVF[k>>1]===cpFam);
   let h=`<div class="carte"><h2><span class="ca">${esc(na)}</span> <span style="color:var(--gris)">vs</span> <span class="cb">${esc(nb)}</span></h2><p class="note">Nés en ${BIRTH[A]} et ${BIRTH[B]} · ${communs.length} épreuve${communs.length>1?'s':''} en commun. Les performances sont recalées sur l'année de catégorie (BE1, BE2, MI1…), calculée avec l'année de naissance.</p></div>`;
   if(!communs.length){box.innerHTML=h+'<div class="vide">Aucune épreuve en commun (même épreuve et même sexe).</div>';return}
   box.innerHTML=h;
@@ -869,6 +883,8 @@ function renderComparer(){
   });
   const head=el('div','grille kpis');head.innerHTML=`<div class="kpi"><div class="lib">Épreuves en commun</div><div class="val">${communs.length}</div></div><div class="kpi"><div class="lib ca">${esc(na.split(' ')[0])} devant</div><div class="val">${devant}</div><div class="det">à la dernière année de catégorie commune</div></div><div class="kpi or"><div class="lib cb">${esc(nb.split(' ')[0])} devant</div><div class="val">${derriere}</div><div class="det">à la dernière année de catégorie commune</div></div>`;
   box.insertBefore(head,box.children[1]);
+  const fm=el('div','');fm.innerHTML=famBtns('cp-fam',cpFam,nbC);box.insertBefore(fm.firstChild,head.nextSibling);
+  box.querySelectorAll('#cp-fam button').forEach(b=>b.onclick=()=>{cpFam=b.dataset.f;renderComparer()});
   cartes.forEach(f=>f());
 }
 
@@ -900,6 +916,19 @@ RA.forEach(r=>{if(r[10]||r[12]==null)return;const k=r[0]+'|'+r[1]+'|'+r[2];const
 const rcEstTop=r=>!r[10]&&r[12]!=null&&Math.abs(rcG(r)-rcTop.get(r[0]+'|'+r[1]+'|'+r[2]))<1e-9;
 const AN_REC=Math.floor(LAST/10000)-1;const rcRecent=r=>rcAn(r)>=AN_REC;
 RA.forEach(r=>{const k=r[0]+'|'+r[1];if(!rcOrd.has(k))rcOrd.set(k,rcOrd.size)});
+/* ordre des épreuves : familles (courses, marche, sauts, lancers), puis distance croissante / discipline / poids d'engin */
+const DISC=['Hauteur','Perche','Longueur','Triple','Poids','Disque','Marteau','Javelot'];
+const EVF=EV.map(e=>famDe([e.groupe]));
+const evRank=(()=>{const key=e=>{const n=e.nom;let d=0;
+  if(/marathon/i.test(n))d=/1\/2/.test(n)?21097:42195;else if(/heure/i.test(n))d=/marche/i.test(n)?12000:15000;
+  else{const m=n.replace(/(\d)\s+(?=\d)/g,'$1').match(/(\d+(?:[.,]\d+)?)\s*(km|m)\b/i);d=m?parseFloat(m[1].replace(',','.'))*(/km/i.test(m[2])?1000:1):0}
+  const par=(n.match(/\((\d+(?:\.\d+)?)/)||[])[1];const di=DISC.findIndex(x=>n.startsWith(x));
+  return [GRP_ORDRE.indexOf(e.groupe),di<0?0:di,d,/salle|piste courte/i.test(n)?1:0,par?parseFloat(par):0,n]};
+  const ks=EV.map((e,i)=>[key(e),i]);ks.sort((a,b)=>{for(let j=0;j<5;j++)if(a[0][j]!==b[0][j])return a[0][j]-b[0][j];return a[0][5].localeCompare(b[0][5],'fr')});
+  const r=[];ks.forEach(([k,i],p)=>r[i]=p);return r})();
+[...rcOrd.keys()].forEach(k=>{const nm=k.split('|')[1].toLowerCase();const id=EV.findIndex(e=>e.nom.toLowerCase()===nm);rcOrd.set(k,id>=0?evRank[id]:1000+rcOrd.get(k))});
+const famBtns=(id,cur,counts)=>`<div class="rc-fam" id="${id}"><button data-f="*" aria-pressed="${cur==='*'}">Toutes<small>${[...counts.values()].reduce((a,b)=>a+b,0)}</small></button>`+FAMS.filter(f=>counts.get(f[0])).map(f=>`<button data-f="${f[0]}" aria-pressed="${cur===f[0]}">${f[1]}<small>${counts.get(f[0])}</small></button>`).join('')+'</div>';
+let atFam='*',cpFam='*';
 
 const rcF={fam:'courses',sx:'*',cats:'j',vue:'grille',q:'',yr:null,ath:null};
 const nk=s=>String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[-']/g,' ');
@@ -1001,6 +1030,9 @@ $('#rc-q').oninput=e=>{rcF.q=e.target.value;if(rcF.q.trim()){const q=nk(rcF.q).t
 const h0=(location.hash||'').slice(1);
 try{history.scrollRestoration='manual'}catch(e){}
 showOnglet(['semaine','epreuve','athlete','comparer','records'].includes(h0)?h0:'semaine');
+addEventListener('popstate',e=>{const s=e.state;if(!s||!s.o)return;histRestore=true;
+  try{Object.assign(ep,s.ep);atSel=s.at;if(atSel!=null)$('#at-nom').value=D.athletes[atSel];showOnglet(s.o)}finally{histRestore=false}
+  window.scrollTo(0,0)});
 window.scrollTo(0,0);requestAnimationFrame(()=>window.scrollTo(0,0));setTimeout(()=>window.scrollTo(0,0),150);
 </script>
 </body>
